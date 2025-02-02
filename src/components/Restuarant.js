@@ -1,11 +1,11 @@
-import { RESTAURANT_URL } from "../utils/constants";
 import { useState, useEffect } from "react";
 import React from "react";
-import { RATINGS_IMAGE } from "../utils/constants";
+import { RATINGS_IMAGE,RESTAURANT_URL } from "../utils/constants";
+import Menu from "./Menu";
 const Restaurants = () => {
   const [restaurantInfo, setRestaurantInfo] = useState({});
   const [recommendedFood, setRecommendedFood] = useState([]);
-
+const [orginalrecommendedFood,setOrginalRecommendedFood]=useState([]);
   useEffect(() => {
     fetchData();
   }, []);
@@ -14,15 +14,16 @@ const Restaurants = () => {
     const json = await data.json();
     console.log(json);
     const restaurantDetails = json?.data?.cards[2]?.card?.card?.info;
-    const food =
-      json?.data?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card
-        ?.card?.itemsCards;
+    const food =json?.data.cards[4].groupedCard.cardGroupMap.REGULAR.cards[2].card.card.itemCards
+   
     setRecommendedFood(food);
     setRestaurantInfo(restaurantDetails);
+    setOrginalRecommendedFood(food);
   };
   const {
     name,
     avgRating,
+    areaName,
     city,
     cloudinaryImageId,
     costForTwoMessage,
@@ -35,12 +36,17 @@ const Restaurants = () => {
         <h1>{name}</h1>
         <div className="RatingsAndOthers">
            <div> <img src={RATINGS_IMAGE}></img>
-            <p>{avgRating}</p>
+            <p>Rating : {avgRating}</p>
            </div>
            <div>
-            <h2>Outlet</h2>
-            <h3>{}</h3>
+            <h2>Outlet : {areaName}</h2>
            </div>
+           <h2 style={{cursor:"pointer"}} onClick={()=>{
+            recommendedFood.length==0?setRecommendedFood(orginalrecommendedFood)
+            :setRecommendedFood([])}}>Recommended({recommendedFood.length})</h2>
+           {recommendedFood.map((dish)=>{
+              return (<Menu key={dish?.card?.info?.id} dishInfo={dish?.card?.info}/>);}
+           )}
         </div>
       </div>
     </div>
