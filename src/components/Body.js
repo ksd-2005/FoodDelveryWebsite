@@ -3,7 +3,7 @@ import res_cards from "../utils/mockData";
 import { useState, useEffect } from "react";
 import { API_URL } from "../utils/constants";
 import ShimmerUI from "./Shimmer";
-import Search from "./Search";
+import { Link } from "react-router";
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -71,7 +71,7 @@ const Body = () => {
       </div>
       <div className="res-container">
         {listOfRestaurants.map((res) => (
-          <Card key={res.info.id} resData={res} />
+          <Link key={res.info.id} to={"restaurant/"+res.info.id}><Card  resData={res} /></Link>
         ))}
       </div>
     </div>
